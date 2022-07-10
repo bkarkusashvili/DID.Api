@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FrontContoller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 require __DIR__ . '/auth.php';
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/get-all', [FrontContoller::class, 'getAll']);
+});
