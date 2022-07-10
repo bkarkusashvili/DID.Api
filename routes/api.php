@@ -20,3 +20,8 @@ require __DIR__ . '/auth.php';
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-all', [FrontContoller::class, 'getAll']);
 });
+
+Route::post('/social', [FrontContoller::class, 'createOrEdit']);
+Route::post('/social/{id}', [FrontContoller::class, 'createOrEdit']);
+Route::post('/generate/text', [FrontContoller::class, 'generateText']);
+Route::post('/generate/image', [FrontContoller::class, 'generateImage']);
