@@ -23,4 +23,9 @@ class Social extends Model
         2 => 'Apply Branding Style',
         3 => 'Generate Text on Photo'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

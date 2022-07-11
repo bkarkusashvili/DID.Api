@@ -25,6 +25,7 @@ class CreateSocialsTable extends Migration
             $table->text('text')->nullable();
             $table->text('photoText')->nullable();
             $table->text('comment')->nullable();
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
     }

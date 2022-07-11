@@ -12,7 +12,9 @@ class FrontContoller extends Controller
 {
     public function getAll()
     {
-        return response()->json([]);
+        $socials = auth()->user()->socials;
+
+        return response()->json($socials);
     }
 
     public function createOrEdit(Request $request)
@@ -35,24 +37,28 @@ class FrontContoller extends Controller
             'materials.*' => 'nullable|image',
         ]);
 
+        if (isset($data['photos'])) {
+            $data['photos'] = collect($data['photos'])->map(function (UploadedFile $file) {
+                return Storage::disk('public')->put('social/photos', $file);
+            });
+        }
+
+        if (isset($data['materials'])) {
+            $data['materials'] = collect($data['materials'])->map(function (UploadedFile $file) {
+                return Storage::disk('public')->put('social/materials', $file);
+            });
+        }
+
+        $userId = auth()->user()->id;
+        $data['user_id'] = $userId;
+
         $id = $request->query('id');
 
         $social = '';
 
-        $photos = $data['photos'];
-        $materials = $data['materials'];
-
-        if ($data['photos']) {
-            $photos = array();
-            collect($data['photos'])->each(function (UploadedFile $file) use ($photos) {
-                array_push($photos, Storage::disk('public')->put('social/photos', $file));
-            });
-            dd($photos);
-        }
-
         if ($id) {
             $social = Social::findOrFail($id);
-            if ($social->user_id !== auth()->user()->id) {
+            if ($social->user_id !== $userId) {
                 abort(403);
             }
 
@@ -64,6 +70,17 @@ class FrontContoller extends Controller
         return response($social, 201);
     }
 
+    public function deleteItem(int $id)
+    {
+        $social = Social::findOrFail($id);
+
+        if ($social->user_id !== auth()->user()->id) {
+            abort(403);
+        }
+
+        return $social->delete();
+    }
+
     public function generateText(Request $request)
     {
         $request->validate([
@@ -72,7 +89,7 @@ class FrontContoller extends Controller
         ]);
 
         $response = Http::contentType('application/json')
-            ->withHeaders(['Authorization' => 'Bearer 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'])
+            ->withHeaders(['Authorization' => 'Bearer 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'])
             ->post('https://api.openai.com/v1/completions', [
                 "model" => "text-ada-001",
                 "prompt" => implode(' ', $request->input('keywords')),
@@ -82,7 +99,6 @@ class FrontContoller extends Controller
                 "frequency_penalty" => 0.5,
                 "presence_penalty" => 0
             ]);
-
 
         $text = json_decode($response->body())->choices[0]->text;
 
