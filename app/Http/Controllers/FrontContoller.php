@@ -89,7 +89,7 @@ class FrontContoller extends Controller
         ]);
 
         $response = Http::contentType('application/json')
-            ->withHeaders(['Authorization' => 'Bearer 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'])
+            ->withHeaders(['Authorization' => 'Bearer ' . env('OPENAI_KEY')])
             ->post('https://api.openai.com/v1/completions', [
                 "model" => "text-ada-001",
                 "prompt" => implode(' ', $request->input('keywords')),
@@ -115,7 +115,7 @@ class FrontContoller extends Controller
         ]);
 
         $response = Http::contentType('application/json')
-            ->withHeaders(['Authorization' => '563492ad6f9170000100000162d1c6dc404b4ec993b4b74fc2a264e2'])
+            ->withHeaders(['Authorization' => env('PEXELS_KEY')])
             ->get('https://api.pexels.com/v1/search', [
                 "query" => implode(' ', $request->input('keywords')),
             ]);
