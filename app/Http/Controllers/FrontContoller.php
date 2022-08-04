@@ -17,6 +17,11 @@ class FrontContoller extends Controller
         return response()->json($socials);
     }
 
+    public function getSocial(Request $request, int $id)
+    {
+        return Social::findOrFail($id);
+    }
+
     public function createOrEdit(Request $request)
     {
         $data = $request->validate([

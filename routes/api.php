@@ -19,6 +19,7 @@ require __DIR__ . '/auth.php';
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-all', [FrontContoller::class, 'getAll']);
+    Route::get('/social/{id}', [FrontContoller::class, 'getSocial']);
     Route::post('/social', [FrontContoller::class, 'createOrEdit']);
     Route::post('/social/{id}', [FrontContoller::class, 'createOrEdit']);
     Route::delete('/social/delete/{id}', [FrontContoller::class, 'deleteItem']);
