@@ -96,13 +96,14 @@ class FrontContoller extends Controller
         $response = Http::contentType('application/json')
             ->withHeaders(['Authorization' => 'Bearer ' . env('OPENAI_KEY')])
             ->post('https://api.openai.com/v1/completions', [
-                "model" => "text-ada-001",
+                "model" => "text-davinci-002",
                 "prompt" => implode(' ', $request->input('keywords')),
-                "temperature" => 0,
-                "max_tokens" => 300,
+                "temperature" => 0.8,
+                "max_tokens" => 500,
                 "top_p" => 1,
-                "frequency_penalty" => 0.5,
-                "presence_penalty" => 0
+                "frequency_penalty" => 0,
+                "presence_penalty" => 0.6,
+                "stop" => [" Human:", " AI:"],
             ]);
 
         $text = json_decode($response->body())->choices[0]->text;
