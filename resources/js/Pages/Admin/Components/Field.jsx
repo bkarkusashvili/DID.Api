@@ -50,6 +50,8 @@ export const Field = ({
     const isDateTime = data.type === "datetime";
     const isGroup = data.type === "group";
 
+    console.log(isSelect, data.multiple, !value, value, data);
+
     const updateData = (value) =>
         setChange((prev) => {
             if (relation || data.relation) {
@@ -79,6 +81,10 @@ export const Field = ({
             ),
         [errors]
     );
+
+    useEffect(() => {
+        isSelect && data.multiline && !value ? [] : value;
+    }, [value]);
 
     return isImage ? (
         <div className="image-input-wrap">
@@ -154,6 +160,7 @@ export const Field = ({
                 disabled={data.disabled}
                 defaultValue={value}
                 label={data.label}
+                multiple={data.multiple}
                 onChange={(e) => updateData(e.target.value)}
             >
                 {data.options?.map((option, key) => (

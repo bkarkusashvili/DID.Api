@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 $adminResources = [
     'category' => CategoryController::class,
+    'sub-category' => SubCategoryController::class,
     'template' => TemplateController::class,
 ];
 

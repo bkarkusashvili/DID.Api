@@ -28,7 +28,7 @@ class TemplateController extends AdminController
             'list' => [
                 ['type' => 'number', 'name' => 'number', 'label' => 'ნომერი'],
                 ['type' => 'select', 'name' => 'size', 'label' => 'ზომა'],
-                ['type' => 'select', 'name' => 'category_id', 'label' => 'კატეგორია'],
+                ['type' => 'select', 'name' => 'category_id', 'label' => 'კატეგორია', 'multiple' => true],
                 ['type' => 'image', 'name' => 'image', 'label' => 'სურათი'],
             ]
         ]

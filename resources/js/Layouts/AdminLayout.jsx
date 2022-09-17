@@ -57,6 +57,7 @@ const menu = [
     // },
     // { text: 'თარგმანი', model: 'translate', canAdd: false },
     { text: "კატეგორია", model: "category", canAdd: true },
+    { text: "შიდა კატეგორია", model: "sub-category", canAdd: true },
     { text: "თემფლეითი", model: "template", canAdd: true },
 ];
 
