@@ -7,6 +7,8 @@ use App\Models\Category;
 
 class SubCategoryController extends AdminController
 {
+    protected $route = 'sub-category';
+
     public $sorting = true;
     public $model = Category::class;
     public $request = CategoryRequest::class;
@@ -24,7 +26,7 @@ class SubCategoryController extends AdminController
         [
             'size' => 4,
             'list' => [
-                ['type' => 'select', 'name' => 'category', 'label' => 'კატეგორია'],
+                ['type' => 'select', 'name' => 'category_id', 'label' => 'კატეგორია'],
             ]
         ]
     ];
@@ -32,11 +34,9 @@ class SubCategoryController extends AdminController
         ['name' => 'id', 'type' => 'number', 'label' => 'ID'],
         ['name' => 'title', 'type' => 'text', 'label' => 'სახელი'],
     ];
-    public $fileFilds = ['image'];
 
     public function __construct()
     {
-
         $this->fields[1]['list'][0]['options'] = Category::whereNull('category_id')->get()->map(function (Category $category) {
             return [
                 'text' => $category->title,
@@ -45,5 +45,12 @@ class SubCategoryController extends AdminController
         });
 
         parent::__construct();
+    }
+
+    public function index($query = null)
+    {
+        $query = $this->model::query()->whereNotNull('category_id');
+
+        return parent::index($query);
     }
 }

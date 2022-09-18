@@ -26,4 +26,11 @@ class CategoryController extends AdminController
         ['name' => 'id', 'type' => 'number', 'label' => 'ID'],
         ['name' => 'title', 'type' => 'text', 'label' => 'სახელი'],
     ];
+
+    public function index($query = null)
+    {
+        $query = $this->model::query()->whereNull('category_id');
+
+        return parent::index($query);
+    }
 }

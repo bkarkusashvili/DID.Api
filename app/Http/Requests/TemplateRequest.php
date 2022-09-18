@@ -26,9 +26,9 @@ class TemplateRequest extends FormRequest
         return [
             'title' => 'required|string',
             'old_url' => 'required|url',
-            'number' => 'required|numeric',
             'size' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
+            'categories' => 'required|array',
+            'categories.*' => 'required|exists:categories,id',
             'image' => [
                 'image',
                 request()->isMethod('POST') ? 'required' : 'nullable'

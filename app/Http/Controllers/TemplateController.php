@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TemplateRequest;
 use App\Models\Category;
 use App\Models\Template;
+use Illuminate\Database\Eloquent\Model;
 
 class TemplateController extends AdminController
 {
     public $sorting = true;
     public $model = Template::class;
     public $request = TemplateRequest::class;
+    public $ignore = ['categories'];
     public $columns = [
         ['field' => 'id', 'headerName' => 'ID'],
         ['field' => 'title', 'headerName' => 'სათაური'],
@@ -26,9 +28,8 @@ class TemplateController extends AdminController
         [
             'size' => 4,
             'list' => [
-                ['type' => 'number', 'name' => 'number', 'label' => 'ნომერი'],
                 ['type' => 'select', 'name' => 'size', 'label' => 'ზომა'],
-                ['type' => 'select', 'name' => 'category_id', 'label' => 'კატეგორია', 'multiple' => true],
+                ['type' => 'select', 'name' => 'categories', 'label' => 'კატეგორია', 'multiple' => true, 'value' => []],
                 ['type' => 'image', 'name' => 'image', 'label' => 'სურათი'],
             ]
         ]
@@ -41,13 +42,12 @@ class TemplateController extends AdminController
 
     public function __construct()
     {
-
-        $this->fields[1]['list'][1]['options'] = [
+        $this->fields[1]['list'][0]['options'] = [
             ['text' => 'Small', 'value' => 0],
             ['text' => 'Medium', 'value' => 1],
             ['text' => 'Large', 'value' => 2],
         ];
-        $this->fields[1]['list'][2]['options'] = Category::all()->map(function (Category $category) {
+        $this->fields[1]['list'][1]['options'] = Category::whereNotNull('category_id')->get()->map(function (Category $category) {
             return [
                 'text' => $category->title,
                 'value' => $category->id,
@@ -55,6 +55,16 @@ class TemplateController extends AdminController
         });
 
         parent::__construct();
+    }
+
+    protected function afterCreate(Model $model)
+    {
+        $model->categories()->sync(request()->input('categories', []));
+    }
+
+    protected function afterUpdate(Model $model)
+    {
+        $model->categories()->sync(request()->input('categories', []));
     }
 }
 

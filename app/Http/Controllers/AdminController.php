@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -20,7 +21,7 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    private $route;
+    protected $route;
 
     public $model;
     public $request;
@@ -34,7 +35,9 @@ class AdminController extends Controller
 
     public function __construct()
     {
-        $this->route = strtolower(class_basename($this->model));
+        if (!$this->route) {
+            $this->route = strtolower(class_basename($this->model));
+        }
 
         Inertia::share('model', $this->route);
         Inertia::share('fields', $this->fields);
@@ -42,7 +45,7 @@ class AdminController extends Controller
         Inertia::share('base', explode('/', request()->path())[0] == 'erudio' ? '/erudio' : '');
     }
 
-    public function index($query = null)
+    public function index(Builder $query = null)
     {
         $query = $this->getListData($query)->paginate(50);
         $paginate = [
@@ -84,6 +87,12 @@ class AdminController extends Controller
         $validator->validate();
         $data = collect($validator->validated());
 
+        if ($this->ignore) {
+            $data = $data->filter(function ($item, $key) {
+                return !collect($this->ignore)->contains($key);
+            });
+        }
+
         $data->each(function ($item, $key) use ($data) {
             if ($item instanceof UploadedFile) {
                 $data[$key] = $this->uploadFile($item, null, $key);
@@ -91,6 +100,8 @@ class AdminController extends Controller
         });
 
         $model = $this->model::create($data->toArray());
+
+        $this->afterCreate($model);
 
         return Redirect::route($this->route . '.edit', [$model->id]);
     }
@@ -139,6 +150,12 @@ class AdminController extends Controller
             return $item !== null;
         });
 
+        if ($this->ignore) {
+            $data = $data->filter(function ($item, $key) {
+                return !collect($this->ignore)->contains($key);
+            });
+        }
+
         $data->filter(function ($item) {
             return $item instanceof UploadedFile || is_array($item);
         })->each(function ($item, $key) use ($data, $model) {
@@ -160,6 +177,8 @@ class AdminController extends Controller
         });
 
         $model->update($data->toArray());
+
+        $this->afterUpdate($model);
 
         return Redirect::back();
     }
@@ -216,6 +235,14 @@ class AdminController extends Controller
         $new = $request->get('new');
 
         return Redirect::back();
+    }
+
+    protected function afterUpdate(Model $model)
+    {
+    }
+
+    protected function afterCreate(Model $model)
+    {
     }
 
     protected function beforeDestroy(Model $model)

@@ -10,4 +10,16 @@ class Template extends Model
     use HasFactory;
 
     public $guarded = [];
+
+    protected $appends = ['categories'];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function getCategoriesAttribute()
+    {
+        return $this->categories()->pluck('id');
+    }
 }
