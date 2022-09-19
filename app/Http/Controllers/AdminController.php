@@ -23,6 +23,7 @@ class AdminController extends Controller
 
     protected $route;
 
+    public $ignore;
     public $model;
     public $request;
     public $columns = [];
