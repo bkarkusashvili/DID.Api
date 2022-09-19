@@ -16,6 +16,7 @@ class TemplateController extends AdminController
     public $columns = [
         ['field' => 'id', 'headerName' => 'ID'],
         ['field' => 'title', 'headerName' => 'სათაური'],
+        ['field' => 'old_url', 'headerName' => 'ლინკი'],
     ];
     public $fields = [
         [
@@ -37,6 +38,7 @@ class TemplateController extends AdminController
     public $search = [
         ['name' => 'id', 'type' => 'number', 'label' => 'ID'],
         ['name' => 'title', 'type' => 'text', 'label' => 'სახელი'],
+        ['name' => 'old_url', 'type' => 'text', 'label' => 'ლინკი'],
     ];
     public $fileFilds = ['image'];
 
