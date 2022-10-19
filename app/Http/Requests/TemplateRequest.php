@@ -26,6 +26,7 @@ class TemplateRequest extends FormRequest
         return [
             'title' => 'required|string',
             'old_url' => 'required|url',
+            'new_url' => 'nullable|url',
             'size' => 'required|numeric',
             'categories' => 'required|array',
             'categories.*' => 'required|exists:categories,id',

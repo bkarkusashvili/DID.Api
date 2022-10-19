@@ -17,6 +17,7 @@ class TemplateController extends AdminController
         ['field' => 'id', 'headerName' => 'ID'],
         ['field' => 'title', 'headerName' => 'სათაური'],
         ['field' => 'old_url', 'headerName' => 'ლინკი'],
+        ['field' => 'new_url', 'headerName' => 'ახალი ლინკი'],
     ];
     public $fields = [
         [
@@ -24,6 +25,7 @@ class TemplateController extends AdminController
             'list' => [
                 ['type' => 'text', 'name' => 'title', 'label' => 'სახელი'],
                 ['type' => 'text', 'name' => 'old_url', 'label' => 'ძველი ლინკი'],
+                ['type' => 'text', 'name' => 'new_url', 'label' => 'ახალი ლინკი'],
             ]
         ],
         [
@@ -39,6 +41,7 @@ class TemplateController extends AdminController
         ['name' => 'id', 'type' => 'number', 'label' => 'ID'],
         ['name' => 'title', 'type' => 'text', 'label' => 'სახელი'],
         ['name' => 'old_url', 'type' => 'text', 'label' => 'ლინკი'],
+        ['name' => 'new_url', 'type' => 'text', 'label' => 'ახალი ლინკი'],
     ];
     public $fileFilds = ['image'];
 
