@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Social;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -127,5 +128,12 @@ class FrontContoller extends Controller
             ]);
 
         return response(json_decode($response->body())->photos);
+    }
+
+    public function getTemplate()
+    {
+        $list = Category::whereNull('category_id')->with('children.templates')->get();
+
+        return $list;
     }
 }

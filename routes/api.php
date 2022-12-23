@@ -26,3 +26,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/generate/text', [FrontContoller::class, 'generateText']);
     Route::post('/generate/image', [FrontContoller::class, 'generateImage']);
 });
+Route::get('/template', [FrontContoller::class, 'getTemplate']);
