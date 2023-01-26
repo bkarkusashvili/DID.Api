@@ -14,9 +14,7 @@ class FrontContoller extends Controller
 {
     public function getAll()
     {
-        $socials = auth()->user()->socials;
-
-        return response()->json($socials);
+        return response()->json(auth()->user()->sites()->with('template.categories')->get());
     }
 
     public function getAllSite()
