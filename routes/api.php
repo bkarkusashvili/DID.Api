@@ -19,11 +19,13 @@ require __DIR__ . '/auth.php';
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-all', [FrontContoller::class, 'getAll']);
+    Route::get('/get-all-site', [FrontContoller::class, 'getAllSite']);
     Route::get('/social/{id}', [FrontContoller::class, 'getSocial']);
     // Route::post('/social', [FrontContoller::class, 'createOrEdit']);
     Route::post('/social/{id}', [FrontContoller::class, 'createOrEdit']);
     Route::delete('/social/delete/{id}', [FrontContoller::class, 'deleteItem']);
     Route::post('/generate/text', [FrontContoller::class, 'generateText']);
     Route::post('/generate/image', [FrontContoller::class, 'generateImage']);
+    Route::post('/site', [FrontContoller::class, 'createSite']);
+    Route::get('/template', [FrontContoller::class, 'getTemplate']);
 });
-Route::get('/template', [FrontContoller::class, 'getTemplate']);

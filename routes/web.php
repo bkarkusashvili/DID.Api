@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,7 @@ $adminResources = [
     'category' => CategoryController::class,
     'sub-category' => SubCategoryController::class,
     'template' => TemplateController::class,
+    'site' => SiteController::class,
 ];
 
 Route::prefix('admin')->group(function () use ($adminResources) {

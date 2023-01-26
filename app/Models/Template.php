@@ -18,6 +18,11 @@ class Template extends Model
         return $this->belongsToMany(Category::class);
     }
 
+    public function sites()
+    {
+        return $this->hasMany(Site::class);
+    }
+
     public function getCategoriesAttribute()
     {
         return $this->categories()->pluck('id');

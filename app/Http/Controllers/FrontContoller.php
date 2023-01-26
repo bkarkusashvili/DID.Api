@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Site;
 use App\Models\Social;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -16,6 +17,11 @@ class FrontContoller extends Controller
         $socials = auth()->user()->socials;
 
         return response()->json($socials);
+    }
+
+    public function getAllSite()
+    {
+        return response()->json(auth()->user()->sites()->with('template.categories')->get());
     }
 
     public function getSocial(Request $request, int $id)
@@ -132,8 +138,19 @@ class FrontContoller extends Controller
 
     public function getTemplate()
     {
-        $list = Category::whereNull('category_id')->with('children.templates')->get();
+        $list = Category::whereNull('category_id')->with('children')->get();
 
         return $list;
+    }
+
+    public function createSite(Request $request)
+    {
+        $data = $request->validate(['template' => 'required|int|exists:templates,id']);
+
+        return Site::create([
+            'user_id' => auth()->user()->id,
+            'template_id' => $data['template'],
+            'status' => 'draft',
+        ]);
     }
 }
