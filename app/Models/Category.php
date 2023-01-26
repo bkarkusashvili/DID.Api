@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Category as ModelsCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +10,7 @@ class Category extends Model
     use HasFactory;
 
     public $guarded = [];
+    protected $appends = ['small', 'medium', 'large'];
 
     public function templates()
     {
@@ -20,5 +20,20 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class);
+    }
+
+    public function getSmallAttribute()
+    {
+        return $this->templates()->where('size', 0)->first();
+    }
+
+    public function getMediumAttribute()
+    {
+        return $this->templates()->where('size', 1)->first();
+    }
+
+    public function getLargeAttribute()
+    {
+        return $this->templates()->where('size', 2)->first();
     }
 }

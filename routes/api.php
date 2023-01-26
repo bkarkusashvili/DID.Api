@@ -25,5 +25,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/social/delete/{id}', [FrontContoller::class, 'deleteItem']);
     Route::post('/generate/text', [FrontContoller::class, 'generateText']);
     Route::post('/generate/image', [FrontContoller::class, 'generateImage']);
+    Route::post('/site', [FrontContoller::class, 'createSite']);
+    Route::get('/template', [FrontContoller::class, 'getTemplate']);
 });
-Route::get('/template', [FrontContoller::class, 'getTemplate']);
