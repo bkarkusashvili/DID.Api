@@ -136,7 +136,7 @@ class FrontContoller extends Controller
 
     public function getTemplate()
     {
-        $list = Category::whereNull('category_id')->with('children')->get();
+        $list = Category::whereNull('category_id')->with('children.templates')->get();
 
         return $list;
     }
