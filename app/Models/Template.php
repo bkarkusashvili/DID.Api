@@ -11,8 +11,6 @@ class Template extends Model
 
     public $guarded = [];
 
-    protected $appends = ['categories'];
-
     public function categories()
     {
         return $this->belongsToMany(Category::class);
@@ -23,8 +21,8 @@ class Template extends Model
         return $this->hasMany(Site::class);
     }
 
-    public function getCategoriesAttribute()
+    public function favorites()
     {
-        return $this->categories()->pluck('id');
+        return $this->hasMany(Favorite::class);
     }
 }

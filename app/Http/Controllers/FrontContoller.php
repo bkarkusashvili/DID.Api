@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Favorite;
 use App\Models\Site;
 use App\Models\Social;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -19,7 +21,7 @@ class FrontContoller extends Controller
 
     public function getAllSite()
     {
-        return response()->json(auth()->user()->sites()->with('template.categories')->get());
+        return response()->json(auth()->user()->sites()->with('template', 'category')->get());
     }
 
     public function getSocial(Request $request, int $id)
@@ -141,14 +143,106 @@ class FrontContoller extends Controller
         return $list;
     }
 
+    public function favorite(Request $request)
+    {
+        $request->validate([
+            'category' => 'required|int|exists:categories,id',
+            'template' => 'required|int|exists:templates,id',
+        ]);
+
+        $userId = auth()->user()->id;
+
+        $favorite = Favorite::where('user_id', $userId)
+            ->where('category_id', $request->input('category'))
+            ->where('template_id', $request->input('template'))
+            ->first();
+
+        if ($favorite) {
+            $favorite->delete();
+        } else {
+            Favorite::create([
+                'user_id' => $userId,
+                'category_id' => $request->input('category'),
+                'template_id' => $request->input('template'),
+            ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     public function createSite(Request $request)
     {
-        $data = $request->validate(['template' => 'required|int|exists:templates,id']);
+        $data = $request->validate([
+            'template' => 'required|int|exists:templates,id',
+            'category' => 'required|int|exists:categories,id'
+        ]);
 
         return Site::create([
             'user_id' => auth()->user()->id,
             'template_id' => $data['template'],
+            'category_id' => $data['category'],
             'status' => 'draft',
         ]);
+    }
+
+    public function getSite(Site $site)
+    {
+        if ($site->user_id !== auth()->user()->id) {
+            abort(403);
+        }
+
+        return $site;
+    }
+
+    public function updateSite(Request $request, Site $site)
+    {
+        $data = $request->validate([
+            'keywords' => 'nullable|string',
+            'websiteType' => 'nullable|int|min:1|max:3',
+            'logo' => 'nullable|image',
+            'socialMedia' => 'nullable|string',
+            'businessImages' => 'nullable|image',
+            'brand' => 'nullable|string',
+        ]);
+
+        if (isset($data['logo'])) {
+            if ($site->data && isset($site->data['logo']) && $site->data['logo']) {
+                Storage::disk('public')->delete($site->data['logo']);
+            }
+
+            $data['logo'] = Storage::disk('public')->put('site/logo', $data['logo']);
+        }
+
+        if (isset($data['businessImages'])) {
+            if ($site->data && isset($site->data['businessImages']) && $site->data['businessImages']) {
+                Storage::disk('public')->delete($site->data['businessImages']);
+            }
+
+            $data['businessImages'] = Storage::disk('public')->put('site/businessImages', $data['businessImages']);
+        }
+
+        $site->update([
+            'data' => array_merge($site->data ?? [], $data),
+            'status' => 'draft',
+        ]);
+
+        return $site;
+    }
+
+    public function deleteSite(Site $site)
+    {
+        if ($site->user_id !== auth()->user()->id) {
+            abort(403);
+        }
+
+        if ($site->data && isset($site->data['logo']) && $site->data['logo']) {
+            Storage::disk('public')->delete($site->data['logo']);
+        }
+
+        if ($site->data && isset($site->data['businessImages']) && $site->data['businessImages']) {
+            Storage::disk('public')->delete($site->data['businessImages']);
+        }
+
+        return $site->delete();
     }
 }

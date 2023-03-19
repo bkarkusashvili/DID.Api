@@ -10,7 +10,12 @@ class Category extends Model
     use HasFactory;
 
     public $guarded = [];
-    protected $appends = ['small', 'medium', 'large'];
+
+    // $size = [
+    //     0 => 'small',
+    //     1 => 'medium',
+    //     2 => 'large',
+    // ];
 
     public function templates()
     {
@@ -22,18 +27,8 @@ class Category extends Model
         return $this->hasMany(Category::class);
     }
 
-    public function getSmallAttribute()
+    public function sites()
     {
-        return $this->templates()->where('size', 0)->first();
-    }
-
-    public function getMediumAttribute()
-    {
-        return $this->templates()->where('size', 1)->first();
-    }
-
-    public function getLargeAttribute()
-    {
-        return $this->templates()->where('size', 2)->first();
+        return $this->hasMany(Site::class);
     }
 }

@@ -5,22 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Site extends Model
+class Favorite extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    public $guarded = [];
 
-    protected $casts = [
-        'data' => 'array',
-    ];
-
-    public function template()
-    {
-        return $this->belongsTo(Template::class);
-    }
-
-    public function owner()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
@@ -28,5 +19,10 @@ class Site extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class);
     }
 }
