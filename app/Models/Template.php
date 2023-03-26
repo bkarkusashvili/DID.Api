@@ -10,6 +10,7 @@ class Template extends Model
     use HasFactory;
 
     public $guarded = [];
+    protected $appends = ['categories'];
 
     public function categories()
     {
@@ -24,5 +25,10 @@ class Template extends Model
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
+    }
+
+    public function getCategoriesAttribute()
+    {
+        return $this->categories()->pluck('id')->toArray();
     }
 }

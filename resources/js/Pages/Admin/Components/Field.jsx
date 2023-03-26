@@ -152,7 +152,7 @@ export const Field = ({
             <InputLabel>{data.label}</InputLabel>
             <Select
                 disabled={data.disabled}
-                defaultValue={value}
+                defaultValue={data.multiple && !value ? [] : value}
                 label={data.label}
                 multiple={data.multiple}
                 onChange={(e) => updateData(e.target.value)}
