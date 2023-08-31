@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Favorite;
 use App\Models\Site;
 use App\Models\Social;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -197,38 +198,52 @@ class FrontContoller extends Controller
     public function updateSite(Request $request, Site $site)
     {
         $data = $request->validate([
-            'keywords' => 'nullable|string',
-            'websiteType' => 'nullable|int|min:1|max:3',
-            'logo' => 'nullable|image',
-            'socialMedia' => 'nullable|string',
-            'businessImages' => 'nullable|image',
-            'brand' => 'nullable|string',
+            'data.keywords' => 'nullable|string',
+            'data.websiteType' => 'nullable|int|min:1|max:3',
+            'data.logo' => 'nullable|image',
+            'data.socialMedia' => 'nullable|string',
+            'data.businessImages' => 'nullable|image',
+            'data.brand' => 'nullable|string',
         ]);
-
-        if (isset($data['logo'])) {
+    
+        if ($request->hasFile('data.logo')) {
             if ($site->data && isset($site->data['logo']) && $site->data['logo']) {
                 Storage::disk('public')->delete($site->data['logo']);
             }
-
-            $data['logo'] = Storage::disk('public')->put('site/logo', $data['logo']);
+    
+            $data['logo'] = Storage::disk('public')->put('site/logo', $data['data.logo']);
         }
-
-        if (isset($data['businessImages'])) {
+    
+        if ($request->hasFile('data.businessImages')) {
             if ($site->data && isset($site->data['businessImages']) && $site->data['businessImages']) {
                 Storage::disk('public')->delete($site->data['businessImages']);
             }
-
-            $data['businessImages'] = Storage::disk('public')->put('site/businessImages', $data['businessImages']);
+    
+            $data['businessImages'] = Storage::disk('public')->put('site/businessImages', $data['data.businessImages']);
         }
-
+    
         $site->update([
             'data' => array_merge($site->data ?? [], $data),
-            'status' => 'draft',
+            'subscription_product_id' => $request->input('subscription_product_id'),
+            'status' => 'pending',
         ]);
-
+    
         return $site;
     }
-
+    
+    public function updateSiteStatus(Request $request, Site $site)
+    {
+        // Check if the current status is 'pending' before updating
+        if ($site->status === 'pending') {
+            // Change the status to 'active'
+            $site->update([
+                'status' => 'active',
+            ]);
+        }
+    
+        return $site;
+    }
+    
     public function deleteSite(Site $site)
     {
         if ($site->user_id !== auth()->user()->id) {

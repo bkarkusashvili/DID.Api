@@ -19,8 +19,8 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
-    // 'allowed_origins' => ['http://localhost:3000', 'https://did.ge', 'https://www.did.ge', 'https://storiai.com', 'https://www.storiai.com'],
+    // 'allowed_origins' => ['*'],
+    'allowed_origins' => ['http://localhost:3000', 'https://did.ge', 'https://www.did.ge', 'https://storiai.com', 'https://www.storiai.com'],
 
     'allowed_origins_patterns' => [],
 

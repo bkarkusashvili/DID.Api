@@ -1,8 +1,16 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FrontContoller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FetchUserData;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\PayzeController;
+
+use App\Http\Controllers\EmailTextController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +40,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favorite', [FrontContoller::class, 'favorite']);
     Route::get('/get-all-site', [FrontContoller::class, 'getAllSite']);
     Route::get('/template', [FrontContoller::class, 'getTemplate']);
+    Route::post('/fetch-user-data', [FetchUserData::class, 'fetchUserData']);
+    Route::post('/save-card-info', [PayzeController::class, 'saveCardInfo']);
+    
 });
+Route::get('email-text/offer-sent', [EmailTextController::class, 'getOfferSent']);
+
+//Email Route
+Route::get('payze-callback', [PayzeController::class, 'payzeCallback']);
+
+
+Route::post('send-mail', [MailController::class, 'sendMail']);
+Route::get('auth', [AuthController::class, 'redirectToAuth']);
+Route::get('auth/callback', [AuthController::class, 'handleAuthCallback']);
+
+Route::post('create-subscription-transactionUrl', [ProductController::class, 'createSubscriptionTransactionUrl']);
+Route::post('justpay',[ProductController::class,'justPay']);
+Route::post('justpay/callback', [ProductController::class, 'justpayCallback']);
+Route::post('subscription/callback', [ProductController::class, 'subscriptionCallback']);
+Route::post('products', [ProductController::class, 'create']);
+
+Route::post('activatesite/{site}',[FrontContoller::class, 'updateSiteStatus']);
