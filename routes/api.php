@@ -10,7 +10,6 @@ use App\Http\Controllers\FetchUserData;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PayzeController;
 
-use App\Http\Controllers\EmailTextController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,9 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/save-card-info', [PayzeController::class, 'saveCardInfo']);
     
 });
-Route::get('email-text/offer-sent', [EmailTextController::class, 'getOfferSent']);
-
-//Email Route
 Route::get('payze-callback', [PayzeController::class, 'payzeCallback']);
 
 

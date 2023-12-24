@@ -49,7 +49,8 @@ class ProductController extends Controller
     {
         $apiKey = env('PAYZE_AUTHORIZATION_KEY');
         $apiSecret = env('PAYZE_SECRET_KEY');
-
+        $frontendUrl = env('FRONTEND_URL');
+        $backendUrl = env('APP_URL');
         $client = new Client();
     
         $name = $request->input('name');
@@ -65,13 +66,13 @@ class ProductController extends Controller
                 'data' => [
                     'amount' => $amount,
                     'currency' => 'GEL',
-                    'orderId ' => 'giorgipapidze37@gmail.com',
-                    'callback' => 'http://localhost:3000/dashboard',
-                    'callbackError' => 'http://localhost:3000/dashboard',
+                    'orderId ' => $email,
+                    'callback' => $frontendUrl . '/activate-site',
+                    'callbackError' => $frontendUrl . '/dashboard',
                     'preauthorize' => false,
                     'lang' => 'KA',
-                    'hookUrl' => 'http://localhost:3000/dashboard',
-                    'hookUrlV2' => 'http://localhost:3000/dashboard',
+                    'hookUrl' => $frontendUrl . '/dashboard',
+                    'hookUrlV2' => $frontendUrl . '/dashboard',
                     'hookRefund' => false,
                 ],
             ],
@@ -87,50 +88,52 @@ class ProductController extends Controller
 
         return response()->json(['response' => $responseData]);
     }
-    public function createSubscriptionTransactionUrl(Request $request)
-    {
-        $client = new \GuzzleHttp\Client();
+    // public function createSubscriptionTransactionUrl(Request $request)
+    // {
+    //     $client = new \GuzzleHttp\Client();
     
-        $authorizationKey = env('PAYZE_AUTHORIZATION_KEY');
-        $secretKey = env('PAYZE_SECRET_KEY');
+    //     $authorizationKey = env('PAYZE_AUTHORIZATION_KEY');
+    //     $secretKey = env('PAYZE_SECRET_KEY');
     
-        $productId = $request->input('productId');
-        $email = $request->input('email');
+    //     $productId = $request->input('productId');
+    //     $email = $request->input('email');
     
-        $payload = [
-            'productId' => $productId,
-            'hookUrl' => 'https://payze.io',
-            'email' => $email,
-            'phone' => '123456723',
-            'callback' => 'http://localhost:8000/api/subscription/callback',
-            'callbackError' => 'http://localhost:8000/api/subscription/callback',
-            'sendEmails' => true,
-        ];
+    //     $payload = [
+    //         'productId' => $productId,
+    //         'hookUrl' => 'https://payze.io',
+    //         'email' => $email,
+    //         'phone' => '123456723',
+    //         'callback' => 'http://localhost:8000/api/subscription/callback',
+    //         'callbackError' => 'http://localhost:8000/api/subscription/callback',
+    //         'sendEmails' => true,
+    //     ];
     
-        $response = $client->request('POST', 'https://payze.io/v2/api/subscription', [
-            'json' => $payload,
-            'headers' => [
-                'Authorization' => "$authorizationKey:$secretKey",
-                'accept' => 'application/json',
-                'content-type' => 'application/json',
-            ],
-        ]);
+    //     $response = $client->request('POST', 'https://payze.io/v2/api/subscription', [
+    //         'json' => $payload,
+    //         'headers' => [
+    //             'Authorization' => "$authorizationKey:$secretKey",
+    //             'accept' => 'application/json',
+    //             'content-type' => 'application/json',
+    //         ],
+    //     ]);
     
-        $responseData = json_decode($response->getBody(), true);
+    //     $responseData = json_decode($response->getBody(), true);
     
-        // Redirect the user to the transaction URL
-        return $responseData;
-    }
-    public function subscriptionCallback(Request $request)
-    {
-        // Redirect the user to your React application on localhost:3000/dashboard
+    //     // Redirect the user to the transaction URL
+    //     return $responseData;
+    // }
+    // public function subscriptionCallback(Request $request)
+    // {
+    //     // Redirect the user to your React application on localhost:3000/dashboard
         
-        return Redirect::to('http://localhost:3000/dashboard');
-    }
+    //     return Redirect::to('http://localhost:3000/dashboard');
+    // }
 
     public function justpayCallback(Request $request)
     {
         // Redirect the user to your React application on localhost:3000/dashboard
-        return Redirect::to('http://localhost:3000/dashboard');
+
+        $frontendUrl = env('FRONTEND_URL');
+        return Redirect::to(`$frontendUrl/dashboard`);
     }
 }

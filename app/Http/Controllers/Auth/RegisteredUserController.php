@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
+use App\Mail\BoughtMail;
+use Illuminate\Support\Facades\Mail; 
+
 
 class RegisteredUserController extends Controller
 {
+
     /**
      * Display the registration view.
      *
@@ -51,6 +55,14 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         $token = $user->createToken('client-web');
+
+                // Define variables for email and type
+        
+
+        // Use the MailController to send an email with dynamic email and type
+        
+        // Pass the mailRequest to the sendMail method
+        Mail::to($user->email)->send(new BoughtMail());
 
         return $token;
     }
