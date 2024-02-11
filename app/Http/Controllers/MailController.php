@@ -14,24 +14,25 @@ class MailController extends Controller
         $email = $request->input('email');
         $type = $request->input('type');
 
-        if (!empty($email)) {
-            switch ($type) {
-                case 'bought':
-                    Mail::to($email)->send(new BoughtMail());
-                    break;
-                case 'fillform':
-                    Mail::to($email)->send(new FillFormMail());
-                    break;
-                case 'registration':
-                    Mail::to($email)->send(new RegistrationMail());
-                    break;
-                default:
-                    return response()->json(['message' => 'Invalid "type" parameter'], 400);
-            }
+        // if (!empty($email)) {
+        //     switch ($type) {
+        //         case 'bought':
+        //             Mail::to($email)->send(new BoughtMail());
+        //             break;
+        //         case 'fillform':
+        //             Mail::to($email)->send(new FillFormMail());
+        //             break;
+        //         case 'registration':
+        //             Mail::to($email)->send(new RegistrationMail());
+        //             break;
+        //         default:
+        //             return response()->json(['message' => 'Invalid "type" parameter'], 400);
+        //     }
 
-            return response()->json(['message' => 'Email sent successfully'], 200);
-        } else {
-            return response()->json(['message' => 'Email not provided'], 400);
-        }
+        //     return response()->json(['message' => 'Email sent successfully'], 200);
+        // } else {
+        //     return response()->json(['message' => 'Email not provided'], 400);
+        // }
+        return response()->json(['message' => '$email is '. $email .', type is '. $type], 200);
     }
 }

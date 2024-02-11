@@ -68,7 +68,7 @@ class ProductController extends Controller
                     'currency' => 'GEL',
                     'orderId ' => $email,
                     'callback' => $frontendUrl . '/activate-site',
-                    'callbackError' => $frontendUrl . '/dashboard',
+                    'callbackError' => $frontendUrl . '/failed-transaction',
                     'preauthorize' => false,
                     'lang' => 'KA',
                     'hookUrl' => $frontendUrl . '/dashboard',
@@ -135,5 +135,9 @@ class ProductController extends Controller
 
         $frontendUrl = env('FRONTEND_URL');
         return Redirect::to(`$frontendUrl/dashboard`);
+    }
+    public function justpayCallbackError(Request $request)
+    {
+        
     }
 }

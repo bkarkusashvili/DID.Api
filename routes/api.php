@@ -52,7 +52,8 @@ Route::get('auth/callback', [AuthController::class, 'handleAuthCallback']);
 
 Route::post('create-subscription-transactionUrl', [ProductController::class, 'createSubscriptionTransactionUrl']);
 Route::post('justpay',[ProductController::class,'justPay']);
-Route::post('justpay/callback', [ProductController::class, 'justpayCallback']);
+Route::post('justpay/callback/successful', [ProductController::class, 'justpayCallbackSuccessful']);
+Route::post('justpay/callback/error', [ProductController::class, 'justpayCallbackError']);
 Route::post('subscription/callback', [ProductController::class, 'subscriptionCallback']);
 Route::post('products', [ProductController::class, 'create']);
 

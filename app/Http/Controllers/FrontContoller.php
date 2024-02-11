@@ -13,6 +13,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
+
 class FrontContoller extends Controller
 {
     public function getAll()
@@ -240,15 +241,16 @@ class FrontContoller extends Controller
                 'status' => 'active',
             ]);
         }
+        
     
         return $site;
     }
     
     public function deleteSite(Site $site)
     {
-        if ($site->user_id !== auth()->user()->id) {
-            abort(403);
-        }
+        // if ($site->user_id !== auth()->user()->id) {
+        //     abort(403);
+        // }
 
         if ($site->data && isset($site->data['logo']) && $site->data['logo']) {
             Storage::disk('public')->delete($site->data['logo']);
