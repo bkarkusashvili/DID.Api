@@ -12,6 +12,8 @@ class MailController extends Controller
 {
     public function sendMail(Request $request) {
         $email = $request->input('email');
+
+
         $type = $request->input('type');
 
         // if (!empty($email)) {

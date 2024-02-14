@@ -248,9 +248,9 @@ class FrontContoller extends Controller
     
     public function deleteSite(Site $site)
     {
-        // if ($site->user_id !== auth()->user()->id) {
-        //     abort(403);
-        // }
+        if ($site->user_id !== auth()->user()->id) {
+            abort(403);
+        }
 
         if ($site->data && isset($site->data['logo']) && $site->data['logo']) {
             Storage::disk('public')->delete($site->data['logo']);

@@ -41,20 +41,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/template', [FrontContoller::class, 'getTemplate']);
     Route::post('/fetch-user-data', [FetchUserData::class, 'fetchUserData']);
     Route::post('/save-card-info', [PayzeController::class, 'saveCardInfo']);
-    
+    Route::post('/justpay/callback/successful', [ProductController::class, 'justpayCallbackSuccessful']);
+    Route::post('justpay/callback/error', [ProductController::class, 'justpayCallbackError']);
+    Route::post('send-mail', [MailController::class, 'sendMail']);
 });
 Route::get('payze-callback', [PayzeController::class, 'payzeCallback']);
 
+Route::post('products', [ProductController::class, 'create']);
 
-Route::post('send-mail', [MailController::class, 'sendMail']);
 Route::get('auth', [AuthController::class, 'redirectToAuth']);
 Route::get('auth/callback', [AuthController::class, 'handleAuthCallback']);
 
 Route::post('create-subscription-transactionUrl', [ProductController::class, 'createSubscriptionTransactionUrl']);
 Route::post('justpay',[ProductController::class,'justPay']);
-Route::post('justpay/callback/successful', [ProductController::class, 'justpayCallbackSuccessful']);
-Route::post('justpay/callback/error', [ProductController::class, 'justpayCallbackError']);
 Route::post('subscription/callback', [ProductController::class, 'subscriptionCallback']);
-Route::post('products', [ProductController::class, 'create']);
 
 Route::post('activatesite/{site}',[FrontContoller::class, 'updateSiteStatus']);

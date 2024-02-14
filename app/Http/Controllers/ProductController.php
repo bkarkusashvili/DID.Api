@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BoughtMail;
+use App\Mail\NotBoughtMail;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActivatedSite;
+use Illuminate\Support\Facades\Mail; 
+
+
 class ProductController extends Controller
 
 {
@@ -129,15 +136,59 @@ class ProductController extends Controller
     //     return Redirect::to('http://localhost:3000/dashboard');
     // }
 
-    public function justpayCallback(Request $request)
-    {
-        // Redirect the user to your React application on localhost:3000/dashboard
 
-        $frontendUrl = env('FRONTEND_URL');
-        return Redirect::to(`$frontendUrl/dashboard`);
+    
+    public function justpayCallbackSuccessful(Request $request)
+    {
+        $siteId = $request->input('site_id');
+        $duration = $request->input('duration');
+        $transactionId = $request->input('transaction_id');
+        $user = Auth::user();
+    
+        try {
+            // Get authenticated user
+            
+            if (!$user) {
+                // If user is not authenticated, return unauthorized response
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+    
+            $userId = $user->id;
+    
+            // Check if the transaction ID already exists
+            $existingTransaction = ActivatedSite::where('payment_transaction_id', $transactionId)->first();
+            
+            if ($existingTransaction) {
+                // If the transaction ID already exists, return a response indicating the duplicate transaction
+                return response()->json(['error' => 'Transaction ID already exists'], 400);
+            }
+    
+            // Save data to database
+            $activatedSite = new ActivatedSite();
+            $activatedSite->user_id = $userId;
+            $activatedSite->site_id = $siteId;
+            $activatedSite->payment_transaction_id = $transactionId;
+            $activatedSite->duration_month = $duration;
+            $activatedSite->save();
+    
+            Mail::to($user->email)->send(new BoughtMail());
+            
+            // Respond to the client
+            return response()->json(['activated_site' => $activatedSite], 200);
+        } 
+        catch (\Exception $e) {
+            // Handle exceptions
+            \Log::error('Error processing request: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    
     }
+    
+    
     public function justpayCallbackError(Request $request)
     {
+        $user = Auth::user();
+        Mail::to($user->email)->send(new NotBoughtMail());
         
     }
 }
